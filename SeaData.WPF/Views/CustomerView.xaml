@@ -1,0 +1,97 @@
+﻿<Window x:Class="SeaData.WPF.Views.CustomerView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        xmlns:vm="clr-namespace:SeaData.WPF.ViewModels"
+        Title="Контрагент" Height="340" Width="330" Icon="..\favicon.ico"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <ControlTemplate x:Key="OkIcon">
+            <Canvas>
+                <Path Margin="0 -7 0 0" Height="14" Width="14" Stretch="Fill" Data="{StaticResource checkStyle0}" Stroke="White"/>
+            </Canvas>
+        </ControlTemplate>
+        <ControlTemplate x:Key="CancelIcon">
+            <Canvas>
+                <Path Margin="0 -7 0 0" Height="14" Width="14" Stretch="Fill" Data="{StaticResource cancelStyle0}" Stroke="White"/>
+            </Canvas>
+        </ControlTemplate>
+    </Window.Resources>
+    <StackPanel>
+        <AdornerDecorator>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Name="lName" Content="Название" Margin="20,0,0,0" Grid.Row="0" FontSize="20" />
+            <Label Name="lInn" Content="ИНН" Grid.Row="2" Margin="20,0,0,0"  />
+            <Label Name="lAddress" Content="Адрес" Margin="20,0,0,0" Grid.Row="4" />
+            <TextBox Name="tbName" Text="{Binding Path=Name, ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"  Grid.Row="1"  Margin="20,0,0,20" Width="285" HorizontalAlignment="Left" TextAlignment="Left" ToolTip="Название. Обязательное поле: не более 100 символов, только кириллица" />
+            <TextBox Name="tbInn" Text="{Binding Path=Inn, ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Margin="20,0,0,20" Width="285" HorizontalAlignment="Left" TextAlignment="Left" ToolTip="ИНН налогоплательщика. Обязательное поле: 12 цифр" />
+            <TextBox Name="tbAddress" Text="{Binding Path=Address, ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Margin="20,0,0,20" Width="285" HorizontalAlignment="Left" TextAlignment="Left"  ToolTip="Адрес. Необязательное поле: не более 255 сиволов" />
+            <StackPanel Grid.Column="0" Grid.Row="7" Margin="0" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Center">
+                    <Menu FontSize="14">
+                        <MenuItem   ToolTip="Отменить изменения и закрыть окно" Command="{Binding CancelCommand}"  Click="bCancel_Click"  >
+                        <MenuItem.Icon>
+                            <ContentControl Template="{StaticResource CancelIcon}"/>
+                        </MenuItem.Icon>
+                        <MenuItem.Header>
+                            <TextBlock Margin="10 0 0 0">Отмена</TextBlock>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem ToolTip="Сохранить изменения и закрыть окно" Command="{Binding UpdateCommand}"  Click="bUpdate_Click" >
+                        <MenuItem.Icon>
+                            <ContentControl Template="{StaticResource OkIcon}"/>
+                        </MenuItem.Icon>
+                        <MenuItem.Header>
+                            <TextBlock Margin="10 0 0 0">Сохранить</TextBlock>
+                        </MenuItem.Header>
+                        <MenuItem.Style>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Mode}">
+                                        <DataTrigger.Value>
+                                            <vm:Mode>Add</vm:Mode>
+                                        </DataTrigger.Value>
+                                        <Setter Property="Header" Value="Создать"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Mode}">
+                                        <DataTrigger.Value>
+                                            <vm:Mode>Edit</vm:Mode>
+                                        </DataTrigger.Value>
+                                        <Setter Property="Header" Value="Сохранить"/>
+                                    </DataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding ElementName=tbName, Path=(Validation.HasError)}" Value="false"/>
+                                            <Condition Binding="{Binding ElementName=tbInn, Path=(Validation.HasError)}" Value="false"/>
+                                            <Condition Binding="{Binding ElementName=tbAddress, Path=(Validation.HasError)}" Value="false"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
+                </Menu>
+            </StackPanel>
+        </Grid>
+        </AdornerDecorator>
+    </StackPanel>
+</Window>
